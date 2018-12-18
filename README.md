@@ -9,5 +9,4 @@ Microservice for matching a consignment of containers to a vessel.
 ## consignment-cli
 Client for testing microservices via command-line interface
 1. Have docker installed and configured for your machine
-2. Download required dependencies: `govendor sync`
-3. Build and run: `make build && make run`
+2. Build and run: `make build && make run`
