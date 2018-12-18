@@ -11,11 +11,11 @@ COPY . .
 RUN apk update && apk add git protobuf
 
 # Install needed go packages
-RUN go get -u github.com/kardianos/govendor
 RUN go get -u github.com/golang/protobuf/protoc-gen-go
 RUN go get -u github.com/micro/protoc-gen-micro
+RUN go get -u github.com/kardianos/govendor
 
-# Fetch project dependencies using govendor
+# Fetch dependencies
 RUN govendor sync
 
 # Generate go proto files using protoc
@@ -37,6 +37,10 @@ WORKDIR /app
 
 # Pull binary from container we labeled as builder
 COPY --from=builder /go/src/shippy/consignment-service/consignment-service .
+
+# Pull proto files from container we labeled as builder
+COPY --from=builder /go/src/shippy/consignment-service/proto/consignment/consignment.pb.go .
+COPY --from=builder /go/src/shippy/consignment-service/proto/consignment/consignment.micro.go .
 
 # Run the binary
 CMD ["./consignment-service"]

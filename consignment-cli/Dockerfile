@@ -7,8 +7,8 @@ FROM golang:alpine as builder
 WORKDIR /go/src/shippy/consignment-cli
 COPY . .
 
-# Install govendor and git then pull in dependencies using govendor
-RUN apk add git
+# Fetch dependencies using govendor
+RUN apk update && apk add git
 RUN go get -u github.com/kardianos/govendor
 RUN govendor sync
 
