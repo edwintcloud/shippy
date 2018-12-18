@@ -2,20 +2,14 @@
 package main
 
 import (
-	"log"
-	"net"
+	"context"
+	"fmt"
 
 	// Import the generated protobuf code
 	pb "shippy/consignment-service/proto/consignment"
 
-	"context"
-
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/reflection"
+	micro "github.com/micro/go-micro"
 )
-
-// Set port for gRPC server below
-const port = ":50051"
 
 // IRepository is our consignment interface
 type IRepository interface {
@@ -48,44 +42,46 @@ type service struct {
 }
 
 // CreateConsignment is a create method handled by the gRPC server.
-func (s *service) CreateConsignment(ctx context.Context, req *pb.Consignment) (*pb.Response, error) {
+func (s *service) CreateConsignment(ctx context.Context, req *pb.Consignment, res *pb.Response) error {
 
 	// Save our consignment
 	consignment, err := s.repo.Create(req)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	// Return match the `Response` message we created in the protobuf definition.
-	return &pb.Response{Created: true, Consignment: consignment}, nil
+	res.Created = true
+	res.Consignment = consignment
+	return nil
 }
 
 // GetConsignments is the getrequest method handled by the gRPC server.
-func (s *service) GetConsignments(ctx context.Context, req *pb.GetRequest) (*pb.Response, error) {
+func (s *service) GetConsignments(ctx context.Context, req *pb.GetRequest, res *pb.Response) error {
 	consignments := s.repo.GetAll()
-	return &pb.Response{Consignments: consignments}, nil
+	res.Consignments = consignments
+	return nil
 }
 
 func main() {
 	repo := &Repository{}
 
-	// Setup gRPC server
-	lis, err := net.Listen("tcp", port)
-	if err != nil {
-		log.Fatalf("failed to listen: %v", err)
-	}
-	s := grpc.NewServer()
+	// Create a new service. Optionally include some options here.
+	srv := micro.NewService(
 
-	// Register our service with the gRPC server, this will tie our implementation
-	// into the auto-generated interface code for our protobuf definition
-	pb.RegisterShippingServiceServer(s, &service{repo})
+		// name must match package name in proto file
+		micro.Name("go.micro.srv.consignment"),
+		micro.Version("latest"),
+	)
 
-	// Register reflection service on gRPC server
-	reflection.Register(s)
-	log.Printf("Starting gRPC server on port%s", port)
-	if err := s.Serve(lis); err != nil {
-		log.Fatalf("failed to serve: %v", err)
-	} else {
+	// Init will parse command line flags
+	srv.Init()
 
+	// Register handler
+	pb.RegisterShippingServiceHandler(srv.Server(), &service{repo})
+
+	// Run the server
+	if err := srv.Run(); err != nil {
+		fmt.Println(err)
 	}
 }
