@@ -12,14 +12,14 @@ RUN apk add git
 RUN go get -u github.com/kardianos/govendor
 RUN govendor sync
 
-# Build binary with flags allowing us to run in alpine linux
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo .
+# Build binary
+RUN go build
 
 # SETUP OUR ALPINE ENV FOR RUNNING BUILT EXECUTABLE
 FROM alpine:latest
 
 # Security related package that's nice to have
-RUN apk --no-cache add ca-certificates
+# RUN apk --no-cache add ca-certificates
 
 # Create app directory and set it as working directory
 RUN mkdir /app

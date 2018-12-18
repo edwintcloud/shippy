@@ -1,9 +1,32 @@
+# consignment-cli/Dockerfile
+
+# BUILD BINARY FIRST WITH OFFICIAL GOLANG IMAGE
+FROM golang:alpine as builder
+
+# Set working directory and copy code into working directory
+WORKDIR /go/src/shippy/consignment-cli
+COPY . .
+
+# Install govendor and git then pull in dependencies using govendor
+RUN apk add git
+RUN go get -u github.com/kardianos/govendor
+RUN govendor sync
+
+# Build binary
+RUN go build
+
+# SETUP OUR ALPINE ENV FOR RUNNING BUILT EXECUTABLE
 FROM alpine:latest
 
-RUN mkdir -p /app
+# Create app directory and set it as working directory
+RUN mkdir /app
 WORKDIR /app
 
+# Add our json file to working directory
 ADD consignment.json /app/consignment.json
-ADD consignment-cli /app/consignment-cli
 
+# Pull binary from container we labeled as builder
+COPY --from=builder /go/src/shippy/consignment-cli/consignment-cli .
+
+# Run the binary
 CMD ["./consignment-cli"]
