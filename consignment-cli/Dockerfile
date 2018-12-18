@@ -4,7 +4,7 @@
 FROM golang:alpine as builder
 
 # Set working directory and copy code into working directory
-WORKDIR /go/src/shippy/consignment-cli
+WORKDIR /go/src/github.com/edwintcloud/shippy/consignment-cli
 COPY . .
 
 # Fetch dependencies using govendor
@@ -26,7 +26,7 @@ WORKDIR /app
 ADD consignment.json /app/consignment.json
 
 # Pull binary from container we labeled as builder
-COPY --from=builder /go/src/shippy/consignment-cli/consignment-cli .
+COPY --from=builder /go/src/github.com/edwintcloud/shippy/consignment-cli/consignment-cli .
 
 # Run the binary
 CMD ["./consignment-cli"]

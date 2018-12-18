@@ -4,7 +4,7 @@
 FROM golang:alpine as builder
 
 # Set working directory and copy code into working directory
-WORKDIR /go/src/shippy/consignment-service
+WORKDIR /go/src/github.com/edwintcloud/shippy/consignment-service
 COPY . .
 
 # Install needed system packages
@@ -19,7 +19,7 @@ RUN go get -u github.com/kardianos/govendor
 RUN govendor sync
 
 # Generate go proto files using protoc
-RUN protoc --proto_path=$GOPATH/src/shippy/consignment-service/proto/consignment:. \
+RUN protoc --proto_path=$GOPATH/src/github.com/edwintcloud/shippy/consignment-service/proto/consignment:. \
     --micro_out=proto/consignment/. --go_out=proto/consignment/. consignment.proto
 
 # Build binary
@@ -36,11 +36,11 @@ RUN mkdir /app
 WORKDIR /app
 
 # Pull binary from container we labeled as builder
-COPY --from=builder /go/src/shippy/consignment-service/consignment-service .
+COPY --from=builder /go/src/github.com/edwintcloud/shippy/consignment-service/consignment-service .
 
 # Pull proto files from container we labeled as builder
-COPY --from=builder /go/src/shippy/consignment-service/proto/consignment/consignment.pb.go .
-COPY --from=builder /go/src/shippy/consignment-service/proto/consignment/consignment.micro.go .
+COPY --from=builder /go/src/github.com/edwintcloud/shippy/consignment-service/proto/consignment/consignment.pb.go .
+COPY --from=builder /go/src/github.com/edwintcloud/shippy/consignment-service/proto/consignment/consignment.micro.go .
 
 # Run the binary
 CMD ["./consignment-service"]
