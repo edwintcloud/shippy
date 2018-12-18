@@ -9,6 +9,12 @@
 			"revisionTime": "2018-09-17T15:23:33Z"
 		},
 		{
+			"checksumSHA1": "28D1tlaum/r1GgVSEZlMG8079SA=",
+			"path": "github.com/edwintcloud/shippy/consignment-service/proto/consignment",
+			"revision": "9af363e98d48c0b379307015c36492a496671ad7",
+			"revisionTime": "2018-12-18T18:11:45Z"
+		},
+		{
 			"checksumSHA1": "6ewdk1VAsYj/h5APg2BnemzZDdw=",
 			"path": "github.com/go-log/log",
 			"revision": "a514cf01a3eb56ec6aff9ae5663453d990e68ed3",
@@ -122,8 +128,8 @@
 		{
 			"checksumSHA1": "Muf1CvswHfejDE9yFfFnKT1L+YE=",
 			"path": "github.com/micro/go-micro",
-			"revision": "c2cc03a47266763aba03ae7980765a2177d1ee6b",
-			"revisionTime": "2018-12-06T18:46:02Z"
+			"revision": "f2efc685d3a39179ece5f74280e4b07eb2f20fcf",
+			"revisionTime": "2018-12-18T18:10:19Z"
 		},
 		{
 			"checksumSHA1": "a4kVRyrPINlfKD4OtimPsf/M3Zg=",
@@ -152,8 +158,8 @@
 		{
 			"checksumSHA1": "jOS6M4F3lhoDDK7daILRM5ACMMA=",
 			"path": "github.com/micro/go-micro/client",
-			"revision": "c2cc03a47266763aba03ae7980765a2177d1ee6b",
-			"revisionTime": "2018-12-06T18:46:02Z"
+			"revision": "f2efc685d3a39179ece5f74280e4b07eb2f20fcf",
+			"revisionTime": "2018-12-18T18:10:19Z"
 		},
 		{
 			"checksumSHA1": "h/CqI2iUgDJfgo1gfAZyfAwNr6U=",
@@ -364,12 +370,6 @@
 			"revisionTime": "2018-12-15T14:29:05Z"
 		},
 		{
-			"checksumSHA1": "GtamqiJoL7PGHsN454AoffBFMa8=",
-			"path": "golang.org/x/net/context",
-			"revision": "e147a9138326bc0e9d4e179541ffd8af41cff8a9",
-			"revisionTime": "2018-12-15T14:29:05Z"
-		},
-		{
 			"checksumSHA1": "pCY4YtdNKVBYRbNvODjx8hj0hIs=",
 			"path": "golang.org/x/net/http/httpguts",
 			"revision": "e147a9138326bc0e9d4e179541ffd8af41cff8a9",
@@ -447,13 +447,7 @@
 			"path": "golang.org/x/text/unicode/norm",
 			"revision": "17bcc049122f272a32787ba38073ee47433023e9",
 			"revisionTime": "2018-12-10T23:38:19Z"
-		},
-		{
-			"checksumSHA1": "ptsOiuISs3k1bdZHQJPo98kWOIo=",
-			"path": "shippy/consignment-service/proto/consignment",
-			"revision": "39c0a3786b925f11a8eec44d78b70ab436296272",
-			"revisionTime": "2018-12-18T05:35:42Z"
 		}
 	],
-	"rootPath": "shippy/consignment-cli"
+	"rootPath": "github.com/edwintcloud/shippy/consignment-cli"
 }
