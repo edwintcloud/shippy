@@ -7,10 +7,20 @@ FROM golang:alpine as builder
 WORKDIR /go/src/shippy/consignment-service
 COPY . .
 
-# Install govendor and git then pull in dependencies using govendor
-RUN apk add git
+# Install needed system packages
+RUN apk update && apk add git protobuf
+
+# Install needed go packages
 RUN go get -u github.com/kardianos/govendor
+RUN go get -u github.com/golang/protobuf/protoc-gen-go
+RUN go get -u github.com/micro/protoc-gen-micro
+
+# Fetch project dependencies using govendor
 RUN govendor sync
+
+# Generate go proto files using protoc
+RUN protoc --proto_path=$GOPATH/src/shippy/consignment-service/proto/consignment:. \
+    --micro_out=proto/consignment/. --go_out=proto/consignment/. consignment.proto
 
 # Build binary
 RUN go build
