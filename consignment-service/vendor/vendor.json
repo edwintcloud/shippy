@@ -9,6 +9,12 @@
 			"revisionTime": "2018-09-17T15:23:33Z"
 		},
 		{
+			"checksumSHA1": "xugCgf4YjGXJVo7+VylARWbVHa8=",
+			"path": "github.com/edwintcloud/shippy/vessel-service/proto/vessel",
+			"revision": "64ae1b11a147df84fc16e0fa18c2b0c8139751e4",
+			"revisionTime": "2018-12-18T19:57:35Z"
+		},
+		{
 			"checksumSHA1": "6ewdk1VAsYj/h5APg2BnemzZDdw=",
 			"path": "github.com/go-log/log",
 			"revision": "a514cf01a3eb56ec6aff9ae5663453d990e68ed3",
