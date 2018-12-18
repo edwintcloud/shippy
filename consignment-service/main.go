@@ -70,7 +70,10 @@ func main() {
 
 	// Register reflection service on gRPC server
 	reflection.Register(s)
+	log.Printf("Starting gRPC server on port%s", port)
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
+	} else {
+
 	}
 }
