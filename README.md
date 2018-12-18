@@ -1,6 +1,13 @@
 # shippy
 An exercise building a shipping platform using micro-services in go. Based on [this](https://ewanvalentine.io/microservices-in-golang-part-1/) blog series.
 
-## Setup
-1. Clone repo to your `$GOPATH/src` directory
-2. Install dependencies with `govendor sync`
+## consignment-service
+Microservice for matching a consignment of containers to a vessel.
+1. Have docker installed and configured for your machine
+2. Build and run: `make build && make run`
+
+## consignment-cli
+Client for testing microservices via command-line interface
+1. Have docker installed and configured for your machine
+2. Download required dependencies: `govendor sync`
+3. Build and run: `make build && make run`
