@@ -1,60 +1,57 @@
 package main
 
 import (
-	"context"
-	"errors"
 	"fmt"
+	"log"
+	"os"
 
 	pb "github.com/edwintcloud/shippy/vessel-service/proto/vessel"
 	"github.com/micro/go-micro"
 )
 
-// Repository is the interface we will use to define our methods
-type Repository interface {
-	FindAvailable(*pb.Specification) (*pb.Vessel, error)
-}
+// defaultHost is our mongoDB default connection uri
+const defaultHost = "localhost:27017"
 
-// VesselRepository is a struct that will hold vessels
-type VesselRepository struct {
-	vessels []*pb.Vessel
-}
+// createDummyData creates dummy data to test our implementation
+func (repo *VesselRepository) createDummyData() {
 
-// FindAvailable checks a specification against a map of vessels.
-// If capacity and max weight are below a vessels capacity and max
-// weight then return that vessel.
-func (repo *VesselRepository) FindAvailable(spec *pb.Specification) (*pb.Vessel, error) {
-	for _, vessel := range repo.vessels {
-		if spec.Capacity <= vessel.Capacity && spec.MaxWeight <= vessel.MaxWeight {
-			return vessel, nil
-		}
-	}
-	return nil, errors.New("no vessel found by that spec")
-}
+	// defer db session to close after method completion
+	defer repo.Close()
 
-// grpc service handler
-type service struct {
-	repo Repository
-}
-
-// FindAvailable here is handled by grpc service
-func (s *service) FindAvailable(ctx context.Context, req *pb.Specification, res *pb.Response) error {
-
-	// Find the next available vessel
-	vessel, err := s.repo.FindAvailable(req)
-	if err != nil {
-		return err
+	// create slice of vessels
+	vessels := []*pb.Vessel{
+		{Id: "vessel001", Name: "Kane's Salty Secret", MaxWeight: 200000, Capacity: 500},
 	}
 
-	// Set the vessel as part of the response message type
-	res.Vessel = vessel
-	return nil
+	// write vessels to db using handler Create method
+	for _, v := range vessels {
+		repo.Create(v)
+	}
 }
 
 func main() {
-	vessels := []*pb.Vessel{
-		&pb.Vessel{Id: "vessel001", Name: "Boaty McBoatface", MaxWeight: 200000, Capacity: 500},
+
+	// try to get mongodb connection uri from env variables
+	host := os.Getenv("DB_HOST")
+	if host == "" {
+		host = defaultHost
 	}
-	repo := &VesselRepository{vessels}
+
+	// Create database session
+	session, err := CreateSession(host)
+
+	// defer session close so database connection is closed on main func exit
+	defer session.Close()
+
+	if err != nil {
+		log.Panicf("could not connect to datastore with host %s - %v", host, err)
+	}
+
+	// copy session as repo
+	repo := &VesselRepository{session.Copy()}
+
+	// test our service by using the dummy data func above
+	repo.createDummyData()
 
 	// create micro service
 	srv := micro.NewService(
@@ -66,7 +63,7 @@ func main() {
 	srv.Init()
 
 	// Register handler and run service
-	pb.RegisterVesselServiceHandler(srv.Server(), &service{repo})
+	pb.RegisterVesselServiceHandler(srv.Server(), &handler{session})
 	if err := srv.Run(); err != nil {
 		fmt.Println(err)
 	}
