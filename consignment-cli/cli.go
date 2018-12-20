@@ -1,4 +1,3 @@
-// consignment-cli/cli.go
 package main
 
 import (
