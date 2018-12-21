@@ -21,11 +21,11 @@ func CreateConnection() (*gorm.DB, error) {
 	return gorm.Open(
 		"postgres",
 		fmt.Sprintf(
-			"host=%s user=%s dbname=%s sslmode=disable password=%s",
-			host,
+			"postgres://%s:%s@%s/%s?sslmode=disable",
 			user,
-			DBName,
 			password,
+			host,
+			DBName,
 		),
 	)
 }

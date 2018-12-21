@@ -26,7 +26,8 @@ services:
       DB_USER: "postgres"
       DB_NAME: "users"
       DB_PASSWORD: "supersecretpassword"
-
+    depends_on:
+      - database
   vessel-service:
     build: ./vessel-service
     ports:
@@ -35,6 +36,8 @@ services:
       MICRO_ADDRESS: ":50051"
       MICRO_REGISTRY: "mdns"
       DB_HOST: "datastore:27017"
+    depends_on:
+      - datastore
 
   consignment-service:
     build: ./consignment-service
@@ -44,13 +47,19 @@ services:
       MICRO_ADDRESS: ":50051"
       MICRO_REGISTRY: "mdns"
       DB_HOST: "datastore:27017"
+    depends_on:
+      - datastore
 
   consignment-cli:
     build: ./consignment-cli
     environment:
       MICRO_REGISTRY: "mdns"
+    depends_on:
+      - consignment-service
   
   user-cli:
     build: ./user-cli
     environment:
       MICRO_REGISTRY: "mdns"
+    depends_on:
+      - user-service

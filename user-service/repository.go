@@ -10,7 +10,7 @@ type Repository interface {
 	GetAll() ([]*pb.User, error)
 	Get(id string) (*pb.User, error)
 	Create(user *pb.User) error
-	GetByEmailAndPassword(user *pb.User) (*pb.User, error)
+	GetByEmail(email string) (*pb.User, error)
 }
 
 // UserRepository is our repo struct holding the db session reference
@@ -24,8 +24,7 @@ func (repo *UserRepository) Get(id string) (*pb.User, error) {
 	user.Id = id
 
 	// find user in db and bind result to user struct
-	// TODO: this just returns first user in db.. actually implement
-	if err := repo.db.First(&user).Error; err != nil {
+	if err := repo.db.Where("Id = ?", id).First(&user).Error; err != nil {
 		return nil, err
 	}
 
@@ -46,11 +45,11 @@ func (repo *UserRepository) GetAll() ([]*pb.User, error) {
 	return users, nil
 }
 
-// GetByEmailAndPassword finds a user in the db and verifies the given matches password in db
-func (repo *UserRepository) GetByEmailAndPassword(user *pb.User) (*pb.User, error) {
+// GetByEmail finds a user in the db by email
+func (repo *UserRepository) GetByEmail(email string) (*pb.User, error) {
+	var user *pb.User
 
-	// TODO: this just returns first user in db.. actually implement
-	if err := repo.db.First(&user).Error; err != nil {
+	if err := repo.db.Where("email = ?", email).First(&user).Error; err != nil {
 		return nil, err
 	}
 
