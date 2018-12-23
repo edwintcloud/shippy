@@ -47,7 +47,7 @@ func (repo *UserRepository) GetAll() ([]*pb.User, error) {
 
 // GetByEmail finds a user in the db by email
 func (repo *UserRepository) GetByEmail(email string) (*pb.User, error) {
-	var user *pb.User
+	user := &pb.User{}
 
 	if err := repo.db.Where("email = ?", email).First(&user).Error; err != nil {
 		return nil, err
