@@ -47,6 +47,7 @@ services:
       MICRO_ADDRESS: ":50051"
       MICRO_REGISTRY: "mdns"
       DB_HOST: "datastore:27017"
+      DISABLE_AUTH: "true"
     depends_on:
       - datastore
 

@@ -73,6 +73,11 @@ func main() {
 func AuthWrapper(fn server.HandlerFunc) server.HandlerFunc {
 	return func(ctx context.Context, req server.Request, resp interface{}) error {
 
+		// if disable auth true then return without decode
+		if os.Getenv("DISABLE_AUTH") == "true" {
+			return fn(ctx, req, resp)
+		}
+
 		// get metadata from context
 		meta, ok := metadata.FromContext(ctx)
 		if !ok {
